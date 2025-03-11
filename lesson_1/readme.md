@@ -58,16 +58,6 @@ linux-modules-5.5.0-050500-generic_ 100%[=======================================
 debugger@ubuntu-learn:~/kernel$ ls
 linux-headers-5.5.0-050500_5.5.0-050500.202001262030_all.deb
 linux-headers-5.5.0-050500-generic_5.5.0-050500.202001262030_amd64.deb
-linux-headers-5.5.0-050500-lowlatency_5.5.0-050500.202001262030_amd64.deb
-linux-image-unsigned-5.5.0-050500-generic_5.5.0-050500.202001262030_amd64.deb
-linux-image-unsigned-5.5.0-050500-lowlatency_5.5.0-050500.202001262030_amd64.deb
-linux-modules-5.5.0-050500-generic_5.5.0-050500.202001262030_amd64.deb
-linux-modules-5.5.0-050500-lowlatency_5.5.0-050500.202001262030_amd64.deb
-debugger@ubuntu-learn:~/kernel$
-ebugger@ubuntu-learn:~/kernel$ rm *low*
-debugger@ubuntu-learn:~/kernel$ ls
-linux-headers-5.5.0-050500_5.5.0-050500.202001262030_all.deb
-linux-headers-5.5.0-050500-generic_5.5.0-050500.202001262030_amd64.deb
 linux-image-unsigned-5.5.0-050500-generic_5.5.0-050500.202001262030_amd64.deb
 linux-modules-5.5.0-050500-generic_5.5.0-050500.202001262030_amd64.deb
 debugger@ubuntu-learn:~/kernel$ sudo dpkg -i *.deb
