@@ -31,18 +31,6 @@ linux-headers-5.5.0-050500-generic_ 100%[=======================================
 
 2025-03-11 08:18:46 (2,18 MB/s) - ‘linux-headers-5.5.0-050500-generic_5.5.0-050500.202001262030_amd64.deb’ saved [1188496/1188496]
 
-debugger@ubuntu-learn:~/kernel$ wget  https://kernel.ubuntu.com/mainline/v5.5/linux-headers-5.5.0-050500-lowlatency_5.5.0-050500.202001262030_amd64.deb
---2025-03-11 08:18:46--  https://kernel.ubuntu.com/mainline/v5.5/linux-headers-5.5.0-050500-lowlatency_5.5.0-050500.202001262030_amd64.deb
-Resolving kernel.ubuntu.com (kernel.ubuntu.com)... 185.125.189.74, 185.125.189.76, 185.125.189.75
-Connecting to kernel.ubuntu.com (kernel.ubuntu.com)|185.125.189.74|:443... connected.
-HTTP request sent, awaiting response... 200 OK
-Length: 1187816 (1,1M) [application/x-debian-package]
-Saving to: ‘linux-headers-5.5.0-050500-lowlatency_5.5.0-050500.202001262030_amd64.deb’
-
-linux-headers-5.5.0-050500-lowlaten 100%[===================================================================>]   1,13M  2,65MB/s    in 0,4s
-
-2025-03-11 08:18:47 (2,65 MB/s) - ‘linux-headers-5.5.0-050500-lowlatency_5.5.0-050500.202001262030_amd64.deb’ saved [1187816/1187816]
-
 debugger@ubuntu-learn:~/kernel$ wget  https://kernel.ubuntu.com/mainline/v5.5/linux-image-unsigned-5.5.0-050500-generic_5.5.0-050500.202001262030_amd64.deb
 --2025-03-11 08:18:47--  https://kernel.ubuntu.com/mainline/v5.5/linux-image-unsigned-5.5.0-050500-generic_5.5.0-050500.202001262030_amd64.deb
 Resolving kernel.ubuntu.com (kernel.ubuntu.com)... 185.125.189.74, 185.125.189.76, 185.125.189.75
@@ -55,18 +43,6 @@ linux-image-unsigned-5.5.0-050500-g 100%[=======================================
 
 2025-03-11 08:18:50 (3,98 MB/s) - ‘linux-image-unsigned-5.5.0-050500-generic_5.5.0-050500.202001262030_amd64.deb’ saved [8996016/8996016]
 
-debugger@ubuntu-learn:~/kernel$ wget  https://kernel.ubuntu.com/mainline/v5.5/linux-image-unsigned-5.5.0-050500-lowlatency_5.5.0-050500.202001262030_amd64.deb
---2025-03-11 08:18:50--  https://kernel.ubuntu.com/mainline/v5.5/linux-image-unsigned-5.5.0-050500-lowlatency_5.5.0-050500.202001262030_amd64.deb
-Resolving kernel.ubuntu.com (kernel.ubuntu.com)... 185.125.189.74, 185.125.189.76, 185.125.189.75
-Connecting to kernel.ubuntu.com (kernel.ubuntu.com)|185.125.189.74|:443... connected.
-HTTP request sent, awaiting response... 200 OK
-Length: 9067252 (8,6M) [application/x-debian-package]
-Saving to: ‘linux-image-unsigned-5.5.0-050500-lowlatency_5.5.0-050500.202001262030_amd64.deb’
-
-linux-image-unsigned-5.5.0-050500-l 100%[===================================================================>]   8,65M  4,37MB/s    in 2,0s
-
-2025-03-11 08:18:52 (4,37 MB/s) - ‘linux-image-unsigned-5.5.0-050500-lowlatency_5.5.0-050500.202001262030_amd64.deb’ saved [9067252/9067252]
-
 debugger@ubuntu-learn:~/kernel$ wget  https://kernel.ubuntu.com/mainline/v5.5/linux-modules-5.5.0-050500-generic_5.5.0-050500.202001262030_amd64.deb
 --2025-03-11 08:18:52--  https://kernel.ubuntu.com/mainline/v5.5/linux-modules-5.5.0-050500-generic_5.5.0-050500.202001262030_amd64.deb
 Resolving kernel.ubuntu.com (kernel.ubuntu.com)... 185.125.189.74, 185.125.189.76, 185.125.189.75
@@ -78,18 +54,6 @@ Saving to: ‘linux-modules-5.5.0-050500-generic_5.5.0-050500.202001262030_amd64
 linux-modules-5.5.0-050500-generic_ 100%[===================================================================>]  49,61M  8,23MB/s    in 6,8s
 
 2025-03-11 08:18:59 (7,25 MB/s) - ‘linux-modules-5.5.0-050500-generic_5.5.0-050500.202001262030_amd64.deb’ saved [52022372/52022372]
-
-debugger@ubuntu-learn:~/kernel$ wget  https://kernel.ubuntu.com/mainline/v5.5/linux-modules-5.5.0-050500-lowlatency_5.5.0-050500.202001262030_amd64.deb
---2025-03-11 08:19:02--  https://kernel.ubuntu.com/mainline/v5.5/linux-modules-5.5.0-050500-lowlatency_5.5.0-050500.202001262030_amd64.deb
-Resolving kernel.ubuntu.com (kernel.ubuntu.com)... 185.125.189.74, 185.125.189.76, 185.125.189.75
-Connecting to kernel.ubuntu.com (kernel.ubuntu.com)|185.125.189.74|:443... connected.
-HTTP request sent, awaiting response... 200 OK
-Length: 52006396 (50M) [application/x-debian-package]
-Saving to: ‘linux-modules-5.5.0-050500-lowlatency_5.5.0-050500.202001262030_amd64.deb’
-
-linux-modules-5.5.0-050500-lowlaten 100%[===================================================================>]  49,60M  8,87MB/s    in 6,0s
-
-2025-03-11 08:19:08 (8,22 MB/s) - ‘linux-modules-5.5.0-050500-lowlatency_5.5.0-050500.202001262030_amd64.deb’ saved [52006396/52006396]
 
 debugger@ubuntu-learn:~/kernel$ ls
 linux-headers-5.5.0-050500_5.5.0-050500.202001262030_all.deb
