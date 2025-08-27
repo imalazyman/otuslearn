@@ -27,6 +27,7 @@
     debugger@ubuntu-learn:~$
     debugger@ubuntu-learn:~$ su -
     Password:
+  #### Просмотр блочных устройств
     root@ubuntu-learn:~# lsblk
     NAME                      MAJ:MIN RM  SIZE RO TYPE MOUNTPOINTS
     sda                         8:0    0   20G  0 disk
@@ -60,6 +61,7 @@
     └─sdi9                      8:137  0    8M  0 part
     sdj                         8:144  0   10G  0 disk
     sr0                        11:0    1 1024M  0 rom
+  #### Создание фаловой системы на устройстве SDJ
     root@ubuntu-learn:~# mkfs.ext4 /dev/sdj
     mke2fs 1.47.1 (20-May-2024)
     Creating filesystem with 2621440 4k blocks and 655360 inodes
@@ -71,13 +73,15 @@
     Writing inode tables: done
     Creating journal (16384 blocks): done
     Writing superblocks and filesystem accounting information: done
-
+  #### Монтирование диска в папку /data
     root@ubuntu-learn:~# mount /dev/sdj /data
     root@ubuntu-learn:~# lsblk
     NAME                      MAJ:MIN RM  SIZE RO TYPE MOUNTPOINTS
     .........
     sdj                         8:144  0   10G  0 disk /data
     .........
+
+  #### Установка и просмотр кофигурации NFS-сервера
     root@ubuntu-learn:~# apt install nfs-kernel-server
     Уже установлен пакет nfs-kernel-server самой новой версии (1:2.6.4-4ubuntu1).
     Summary:
@@ -184,6 +188,8 @@
     #
     [svcgssd]
     # principal=
+
+#### Создаем директорию для общего доступа, назначаем права и настраиваем общий доступ
     root@ubuntu-learn:~# mkdir -p /data/share/upload
     root@ubuntu-learn:~# chown -R nobody:nogroup /data/share/upload/
     root@ubuntu-learn:~# chmod 0777  /data/share/upload/
@@ -233,12 +239,12 @@
     Export list for 10.4.136.162:
     /data/share/upload *
 
-### Ручное монтирование
+#### Ручное монтирование
     [root@redos-learn ~]# mount -t nfs 10.4.136.162:/data/share/upload /mnt/shares/
     [root@redos-learn ~]# mount | grep shares
     10.4.136.162:/data/share/upload on /mnt/shares type nfs4 (rw,relatime,vers=4.2,rsize=262144,wsize=262144,namlen=255,hard,proto=tcp,timeo=600,retrans=2,sec=sys,clientaddr=10.4.136.135,local_lock=none,addr=10.4.136.162)
 
-### Монтирование через fstab, версия NFS -3
+#### Монтирование через fstab, версия NFS -3
     [root@redos-learn ~]# cat /etc/fstab
     .......
     UUID=69b200e2-3b07-4586-8e2b-c1473654cdf4 /                       ext4    defaults        1 1
