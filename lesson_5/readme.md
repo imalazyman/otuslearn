@@ -3,27 +3,27 @@
 
 <!-- Настройка сервера -->
 
-debugger@ubuntu-learn:~$ neofetch
-            .-/+oossssoo+/-.               debugger@ubuntu-learn
-        `:+ssssssssssssssssss+:`           ---------------------
-      -+ssssssssssssssssssyyssss+-         OS: Ubuntu 24.10 x86_64
-    .ossssssssssssssssssdMMMNysssso.       Host: VirtualBox 1.2
-   /ssssssssssshdmmNNmmyNMMMMhssssss/      Kernel: 6.11.0-21-generic
-  +ssssssssshmydMMMMMMMNddddyssssssss+     Uptime: 16 hours, 46 mins
- /sssssssshNMMMyhhyyyyhmNMMMNhssssssss/    Packages: 819 (dpkg)
-.ssssssssdMMMNhsssssssssshNMMMdssssssss.   Shell: bash 5.2.32
-+sssshhhyNMMNyssssssssssssyNMMMysssssss+   Resolution: 1280x800
-ossyNMMMNyMMhsssssssssssssshmmmhssssssso   Terminal: /dev/pts/0
-ossyNMMMNyMMhsssssssssssssshmmmhssssssso   CPU: Intel i7-8700 (2) @ 3.192GHz
-+sssshhhyNMMNyssssssssssssyNMMMysssssss+   GPU: 00:02.0 VMware SVGA II Adapter
-.ssssssssdMMMNhsssssssssshNMMMdssssssss.   Memory: 254MiB / 1647MiB
- /sssssssshNMMMyhhyyyyhdNMMMNhssssssss/
-  +sssssssssdmydMMMMMMMMddddyssssssss+
-   /ssssssssssshdmNNNNmyNMMMMhssssss/
-    .ossssssssssssssssssdMMMNysssso.
-      -+sssssssssssssssssyyyssss+-
-        `:+ssssssssssssssssss+:`
-            .-/+oossssoo+/-.
+    debugger@ubuntu-learn:~$ neofetch
+                .-/+oossssoo+/-.               debugger@ubuntu-learn
+            `:+ssssssssssssssssss+:`           ---------------------
+          -+ssssssssssssssssssyyssss+-         OS: Ubuntu 24.10 x86_64
+        .ossssssssssssssssssdMMMNysssso.       Host: VirtualBox 1.2
+      /ssssssssssshdmmNNmmyNMMMMhssssss/      Kernel: 6.11.0-21-generic
+      +ssssssssshmydMMMMMMMNddddyssssssss+     Uptime: 16 hours, 46 mins
+    /sssssssshNMMMyhhyyyyhmNMMMNhssssssss/    Packages: 819 (dpkg)
+    .ssssssssdMMMNhsssssssssshNMMMdssssssss.   Shell: bash 5.2.32
+    +sssshhhyNMMNyssssssssssssyNMMMysssssss+   Resolution: 1280x800
+    ossyNMMMNyMMhsssssssssssssshmmmhssssssso   Terminal: /dev/pts/0
+    ossyNMMMNyMMhsssssssssssssshmmmhssssssso   CPU: Intel i7-8700 (2) @ 3.192GHz
+    +sssshhhyNMMNyssssssssssssyNMMMysssssss+   GPU: 00:02.0 VMware SVGA II Adapter
+    .ssssssssdMMMNhsssssssssshNMMMdssssssss.   Memory: 254MiB / 1647MiB
+    /sssssssshNMMMyhhyyyyhdNMMMNhssssssss/
+      +sssssssssdmydMMMMMMMMddddyssssssss+
+      /ssssssssssshdmNNNNmyNMMMMhssssss/
+        .ossssssssssssssssssdMMMNysssso.
+          -+sssssssssssssssssyyyssss+-
+            `:+ssssssssssssssssss+:`
+                .-/+oossssoo+/-.
 
 debugger@ubuntu-learn:~$
 debugger@ubuntu-learn:~$ su -
