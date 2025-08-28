@@ -16,7 +16,9 @@
         GRUB_CMDLINE_LINUX=""
 
 так же расскоментируем строку
+
         #GRUB_DISABLE_RECOVERY="true"
 и изменим ее сл. образом:
+
         GRUB_DISABLE_RECOVERY="false"
 
