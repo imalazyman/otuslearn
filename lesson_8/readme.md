@@ -6,7 +6,7 @@
 
 ## 1. Включить отображение меню Grub
 
-### Редактирование файла конфигурации grub
+#### Редактирование файла конфигурации grub
 Приводим файл к виду:
 
         GRUB_DEFAULT=0
@@ -23,7 +23,7 @@
 
         GRUB_DISABLE_RECOVERY="false"
 
-### Обновление конфигурации файла загрузки и перезагрузка машины
+#### Обновление конфигурации файла загрузки и перезагрузка машины
 
         debugger@ubuntu-learn:~$ sudo update-grub
         Sourcing file `/etc/default/grub'
@@ -39,3 +39,7 @@
         Adding boot menu entry for UEFI Firmware Settings ...
         done
         debugger@ubuntu-learn:~$ sudo reboot
+
+#### После перезагрузки виден экран выбора вариантов загрузки
+
+![grub_boot](grub-menu.jpg).
