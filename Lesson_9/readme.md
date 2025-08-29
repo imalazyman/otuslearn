@@ -24,3 +24,21 @@
 		sudo cp ./watchlog /etc/default
 
 Генерим лог-файл [whatchlog.log](./whatchlog.log)  и кладем его в папку /var/log
+Создадим скрипт:[watchlog.sh](.watchlog.sh) следующего содержания
+
+		#!/bin/bash
+
+		WORD=$1
+		LOG=$2
+		DATE=`date`
+
+		if grep $WORD $LOG &> /dev/null
+		then
+		logger "$DATE: I found word, Master!"
+		else
+		exit 0
+		fi
+
+ископируем его в папку /opt
+
+		sudo cp watchlog.sh /opt
