@@ -24,6 +24,7 @@
 		sudo cp ./watchlog /etc/default
 
 Генерим лог-файл [whatchlog.log](./whatchlog.log)  и кладем его в папку /var/log
+
 Создадим скрипт:[watchlog.sh](.watchlog.sh) следующего содержания
 
 		#!/bin/bash
