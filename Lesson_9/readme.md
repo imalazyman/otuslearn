@@ -23,4 +23,4 @@
 
 		sudo cp ./watchlog /etc/default
 
-Генерим лог-файл whatchlog.log [here](./whatchlog.log)  и кладем его в папку /var/log
+Генерим лог-файл [whatchlog.log](./whatchlog.log)  и кладем его в папку /var/log
