@@ -3,6 +3,9 @@
 2. Установить spawn-fcgi и создать unit-файл (spawn-fcgi.sevice) с помощью переделки init-скрипта (https://gist.github.com/cea2k/1318020).
 3. Доработать unit-файл Nginx (nginx.service) для запуска нескольких инстансов сервера с разными конфигурационными файлами одновременно.
 
+
+Для выполнения используется Vagrant, [Vagrantfile](./Vagrantfile) прилагается.
+
 ## 1. Написать service...
 
 Задаем пароль для root и в дальнейшем все действия выполняем под ним
@@ -92,7 +95,7 @@
 
 Создадим юнит для таймера [log-monitor.timer](./log-monitor.timer):
 
-		root@sysd:~#cat > /etc/systemd/system/log-monitor.timer << 'END'
+		root@sysd:~# cat > /etc/systemd/system/log-monitor.timer << 'END'
 		[Unit]
 		Description=Run log monitor every 30 seconds
 		Requires=log-monitor.service
@@ -140,12 +143,42 @@
 		Sep  1 12:02:30 ubuntu-jammy root: 01.09.2025-12:02:30 - НАЙДЕНО: 21 вхождений ключевого слова 'ALERT' в /var/log/watchlog.log
 		Sep  1 12:03:00 ubuntu-jammy root: 01.09.2025-12:03:00 - НАЙДЕНО: 21 вхождений ключевого слова 'ALERT' в /var/log/watchlog.log
 		Sep  1 12:03:30 ubuntu-jammy root: 01.09.2025-12:03:30 - НАЙДЕНО: 21 вхождений ключевого слова 'ALERT' в /var/log/watchlog.log
-		Sep  1 12:04:00 ubuntu-jammy root: 01.09.2025-12:04:00 - НАЙДЕНО: 21 вхождений ключевого слова 'ALERT' в /var/log/watchlog.log
-		Sep  1 12:04:30 ubuntu-jammy root: 01.09.2025-12:04:30 - НАЙДЕНО: 21 вхождений ключевого слова 'ALERT' в /var/log/watchlog.log
-		Sep  1 12:05:00 ubuntu-jammy root: 01.09.2025-12:05:00 - НАЙДЕНО: 21 вхождений ключевого слова 'ALERT' в /var/log/watchlog.log
-		Sep  1 12:05:30 ubuntu-jammy root: 01.09.2025-12:05:30 - НАЙДЕНО: 21 вхождений ключевого слова 'ALERT' в /var/log/watchlog.log
-		Sep  1 12:06:00 ubuntu-jammy root: 01.09.2025-12:06:00 - НАЙДЕНО: 21 вхождений ключевого слова 'ALERT' в /var/log/watchlog.log
-		Sep  1 12:06:30 ubuntu-jammy root: 01.09.2025-12:06:30 - НАЙДЕНО: 21 вхождений ключевого слова 'ALERT' в /var/log/watchlog.log
-		Sep  1 12:07:00 ubuntu-jammy root: 01.09.2025-12:07:00 - НАЙДЕНО: 21 вхождений ключевого слова 'ALERT' в /var/log/watchlog.log
-		Sep  1 12:07:30 ubuntu-jammy root: 01.09.2025-12:07:30 - НАЙДЕНО: 21 вхождений ключевого слова 'ALERT' в /var/log/watchlog.log
-		Sep  1 12:08:00 ubuntu-jammy root: 01.09.2025-12:08:00 - НАЙДЕНО: 21 вхождений ключевого слова 'ALERT' в /var/log/watchlog.log
+		Sep  1 12:04:00 ubuntu-jammy root: 01.09.2025-12:04:00 - НАЙДЕНО:
+
+## 2. Установить spawn-fcgi и создать unit-файл (spawn-fcgi.sevice) с помощью переделки init-скрипта.
+
+spawn-fcgi и зависимости предустановлены с помощью [Vagrant](./Vagrantfile)
+
+создаем файл настроек для сервиса.
+
+		root@sysd:~# mkdir /etc/spawn-fcgi/
+		root@sysd:~# cat > /etc/spawn-fcgi/fcgi.conf << 'END'
+		SOCKET=/var/run/php-fcgi.sock
+		OPTIONS="-u www-data -g www-data -s $SOCKET -S -M 0600 -C 32 -F 1 -- /usr/bin/php-cgi"
+		END
+
+Создаем юнит-файл
+
+		root@sysd:~# cat > /etc/systemd/system/spawn-fcgi.service << 'END'
+		[Unit]
+		Description=Spawn-fcgi startup service by Otus
+		After=network.target
+
+		[Service]
+		Type=simple
+		PIDFile=/var/run/spawn-fcgi.pid
+		EnvironmentFile=/etc/spawn-fcgi/fcgi.conf
+		ExecStart=/usr/bin/spawn-fcgi -n $OPTIONS
+		KillMode=process
+
+		[Install]
+		WantedBy=multi-user.target
+		END
+
+
+## 3. Доработать unit-файл Nginx (nginx.service) для запуска нескольких инстансов сервера с разными конфигурационными файлами одновременно
+
+nginx предустановлен с помощью [Vagrant](./Vagrantfile)
+
+
+
