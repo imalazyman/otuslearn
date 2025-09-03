@@ -179,6 +179,32 @@ spawn-fcgi и зависимости предустановлены с помо�
 ## 3. Доработать unit-файл Nginx (nginx.service) для запуска нескольких инстансов сервера с разными конфигурационными файлами одновременно
 
 nginx предустановлен с помощью [Vagrant](./Vagrantfile)
+Во избежание конфликтовостановим и отключем apache.
+
+		root@sysd:~# systemctl disable apache2
+
+После чего, запустим nginx
+
+		root@sysd:~# systemctl start nginx
+		root@sysd:~# systemctl status nginx
+		● nginx.service - A high performance web server and a reverse proxy server
+			Loaded: loaded (/lib/systemd/system/nginx.service; enabled; vendor preset: enabled)
+			Active: active (running) since Wed 2025-09-03 04:48:52 UTC; 1s ago
+			Docs: man:nginx(8)
+			Process: 2458 ExecStartPre=/usr/sbin/nginx -t -q -g daemon on; master_process on; (code=exited, status=0/SUCCESS)
+			Process: 2459 ExecStart=/usr/sbin/nginx -g daemon on; master_process on; (code=exited, status=0/SUCCESS)
+		Main PID: 2460 (nginx)
+			Tasks: 3 (limit: 1101)
+			Memory: 5.1M
+				CPU: 21ms
+			CGroup: /system.slice/nginx.service
+					├─2460 "nginx: master process /usr/sbin/nginx -g daemon on; master_process on;"
+					├─2461 "nginx: worker process" "" "" "" "" "" "" "" "" "" "" "" "" "" "" "" "" "" "" "" "" "" "" "" "" "" "" ""
+					└─2462 "nginx: worker process" "" "" "" "" "" "" "" "" "" "" "" "" "" "" "" "" "" "" "" "" "" "" "" "" "" "" ""
+
+		Sep 03 04:48:52 sysd systemd[1]: Starting A high performance web server and a reverse proxy server...
+		Sep 03 04:48:52 sysd systemd[1]: Started A high performance web server and a reverse proxy server.
+
 
 Посмотрим оригинальный файл юнита nginx
 
@@ -213,7 +239,7 @@ nginx предустановлен с помощью [Vagrant](./Vagrantfile)
 		[Install]
 		WantedBy=multi-user.target
 
-Для запуска нескольких экземпляров nginx создадим новый юнит, который будет работать с шаблоними.
+Для запуска нескольких экземпляров nginx создадим новый юнит, который будет работать с шаблонами.
 
 		root@sysd:~#cat > /etc/systemd/system/nginx@.service << 'END'
 		[Unit]
@@ -320,7 +346,7 @@ nginx предустановлен с помощью [Vagrant](./Vagrantfile)
 		#       }
 		#}
 
-Изменим строчкис путями файлов до PID
+Изменим строчки с путями файлов до PID
 
 		pid /run/nginx.pid;
 
@@ -332,7 +358,7 @@ nginx предустановлен с помощью [Vagrant](./Vagrantfile)
 
 		pid /run/nginx-second.pid;
 
-для второго. Так же закоментируем подключение файлов конфигурации дополнительных сайтов
+для второго. Так же закомментируем подключение файлов конфигурации дополнительных сайтов
 
 		#include /etc/nginx/sites-enabled/*;
 
@@ -357,4 +383,27 @@ nginx предустановлен с помощью [Vagrant](./Vagrantfile)
 
 для второго.
 
+полученые файлы [nginx-first.conf](./nginx-first.conf) и [nginx-second.conf](./nginx-second.conf) поместим в папку /etc/nginx/ и проверим работу сервисов
 
+		root@sysd:~# systemctl start nginx@first
+		root@sysd:~# systemctl start nginx@second
+		root@sysd:~# ss -tnulp | grep nginx
+		tcp   LISTEN 0      511             0.0.0.0:80        0.0.0.0:*    users:(("nginx",pid=2462,fd=6),("nginx",pid=2461,fd=6),("nginx",pid=2460,fd=6))
+		tcp   LISTEN 0      511             0.0.0.0:9001      0.0.0.0:*    users:(("nginx",pid=3383,fd=6),("nginx",pid=3382,fd=6),("nginx",pid=3381,fd=6))
+		tcp   LISTEN 0      511             0.0.0.0:9002      0.0.0.0:*    users:(("nginx",pid=3390,fd=6),("nginx",pid=3389,fd=6),("nginx",pid=3388,fd=6))
+		tcp   LISTEN 0      511                [::]:80           [::]:*    users:(("nginx",pid=2462,fd=7),("nginx",pid=2461,fd=7),("nginx",pid=2460,fd=7))
+		root@sysd:~#
+		root@sysd:~# ps afx | grep nginx
+		3408 pts/0    S+     0:00                      \_ grep --color=auto nginx
+		2460 ?        Ss     0:00 nginx: master process /usr/sbin/nginx -g daemon on; master_process on;
+		2461 ?        S      0:00  \_ nginx: worker process
+		2462 ?        S      0:00  \_ nginx: worker process
+		3381 ?        Ss     0:00 nginx: master process /usr/sbin/nginx -c /etc/nginx/nginx-first.conf -g daemon on; master_process on;
+		3382 ?        S      0:00  \_ nginx: worker process
+		3383 ?        S      0:00  \_ nginx: worker process
+		3388 ?        Ss     0:00 nginx: master process /usr/sbin/nginx -c /etc/nginx/nginx-second.conf -g daemon on; master_process on;
+		3389 ?        S      0:00  \_ nginx: worker process
+		3390 ?        S      0:00  \_ nginx: worker process
+		root@sysd:~#
+
+Как видно стартованы 3 сервиса - основной и два дополнительных.
