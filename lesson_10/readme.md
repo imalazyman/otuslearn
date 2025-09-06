@@ -67,3 +67,26 @@
         REPORT+="$TOP_URLS\n"
 
 
+Следующим пунктом выберем самые часто встречающиеся ошибки, коды ошибок - 403,404,500,502,503
+
+        REPORT+="\nОшибки веб-сервера:\n"
+        ERRORS=$(grep -E "^\S+.*" $LOG_FILE | grep -E ' 403| 404| 500| 502| 503' | awk '{print $9}' | sort | uniq -c | sort -rn)
+        REPORT+="$ERRORS\n"
+
+Выбираем все коды ответа веб сервера
+
+        REPORT+="\nВсе коды HTTP ответа:\n"
+        HTTP_CODES=$(grep -E "^\S+.*" $LOG_FILE | awk {'print $9'} | grep -E '[0-9][0-9][0-9]' | sort | uniq -c | sort -rn)
+        REPORT+="$HTTP_CODES\n"
+
+Теперь переменную REPORT запишем в файл report.txt 
+        
+        echo -e "$REPORT" > report.txt
+
+И отправим на почту
+
+        echo "$REPORT" | mail -s "Log_Report" vagrant@localhost
+
+После чего удалим файл блокировки
+
+        rm -f "$LOCK_FILE"

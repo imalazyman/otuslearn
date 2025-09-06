@@ -49,7 +49,7 @@ REPORT+="\nВсе коды HTTP ответа:\n"
 HTTP_CODES=$(grep -E "^\S+.*" $LOG_FILE | awk {'print $9'} | grep -E '[0-9][0-9][0-9]' | sort | uniq -c | sort -rn)
 REPORT+="$HTTP_CODES\n"
 
-echo -e "$REPORT" > new.txt
+echo -e "$REPORT" > report.txt
 echo "$REPORT" | mail -s "Log_Report" vagrant@localhost
 
 
