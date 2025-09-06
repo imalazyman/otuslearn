@@ -90,3 +90,84 @@
 После чего удалим файл блокировки
 
         rm -f "$LOCK_FILE"
+
+Запустим скрипт
+
+        [vagrant@bashlog ~]$ ./analize.sh
+
+И проверм почту
+
+        [vagrant@bashlog ~]$ mail
+        s-nail version v14.9.22.  Type `?' for help
+        /var/spool/mail/vagrant: 1 message 1 unread
+        ▸U  1 vagrant@bashlog.loca  2025-09-06 16:43   61/2243  "Log_Report                                                    "
+        & exit
+        [vagrant@bashlog ~]$
+
+Как видно в почтовом ящике пользователя vagrant, появилось письмо. Посмотрим его.
+
+        [vagrant@bashlog ~]$ mail
+        s-nail version v14.9.22.  Type `?' for help
+        /var/spool/mail/vagrant: 2 messages 1 new 2 unread
+        U  1 vagrant@bashlog.loca  2025-09-06 16:43   61/2243  "Log_Report                                                    "
+        &
+        [-- Message  1 -- 60 lines, 2233 bytes --]:
+        From: vagrant@bashlog.localdomain
+        Message-Id: <202509061919.586JJpRj005085@bashlog.localdomain>
+        Date: Sat, 06 Sep 2025 19:19:51 +0000
+        To: vagrant@bashlog.localdomain
+        Subject: Log_Report
+
+        Отчет о запросах с последнего запуска скрипта (06.Sep.2025:19:19:51):\n\n\nСписок IP-адресов с наибольшим количеством за
+        просов:\n     45 93.158.167.130
+            39 109.236.252.130
+            37 212.57.117.19
+            33 188.43.241.106
+            31 87.250.233.68
+            24 62.75.198.172
+            22 148.251.223.21
+            20 185.6.8.9
+            17 217.118.66.161
+            16 95.165.18.146
+            12 95.108.181.93
+            12 62.210.252.196
+            12 185.142.236.35
+            12 162.243.13.195
+            8 163.179.32.118\n\nСписок запрашиваемых URL:\n    157 /
+            120 /wp-login.php
+            57 /xmlrpc.php
+            26 /robots.txt
+            12 /favicon.ico
+            11 400
+            9 /wp-includes/js/wp-embed.min.js?ver=5.0.4
+            7 /wp-admin/admin-post.php?page=301bulkoptions
+            7 /1
+            6 /wp-content/uploads/2016/10/robo5.jpg
+            6 /wp-content/uploads/2016/10/robo4.jpg
+            6 /wp-content/uploads/2016/10/robo3.jpg
+            6 /wp-content/uploads/2016/10/robo2.jpg
+            6 /wp-content/uploads/2016/10/robo1.jpg
+            6 /wp-content/uploads/2016/10/aoc-1.jpg\n\nОшибки веб-сервера:\n     51 404
+            3 500
+            1 403\n\nВсе коды HTTP ответа:\n    498 200
+            95 301
+            51 404
+            7 400
+            3 500
+            2 499
+            1 405
+            1 403
+            1 304\n
+
+        & exit
+        You have mail in /var/spool/mail/vagrant
+
+Теперь редактируем crontab
+        
+        crontab -e
+
+И добавляем строку (выполнять в 0 минут каждого часа)
+
+        0 * * * * /home/vagrant/analize.sh 
+
+### Конец
