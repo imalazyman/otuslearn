@@ -1,0 +1,39 @@
+# roles/common/tasks/setup_el.yml
+---
+- name: Install EPEL repository # Добавление EPEL репозитория
+  ansible.builtin.dnf:
+    name: epel-release
+    state: present
+
+- name: Install basic packages # установка основных пакетов
+  ansible.builtin.dnf:
+    name:
+      - vim
+      - nano
+      - curl
+      - wget
+      - htop
+      - git
+    state: present
+
+- name: Ensure firewalld is started and enabled # Включаем Firewall
+  ansible.builtin.service:
+    name: firewalld
+    state: started
+    enabled: yes
+
+- name: Ensure SELinux is enforcing # Включаем Selinux в состояние enforcing
+  ansible.builtin.selinux:
+    policy: targeted
+    state: enforcing
+
+- name: Reboot the system if required (e.g., after SELinux change)
+  ansible.builtin.reboot:
+    msg: "Reboot triggered by Ansible for SELinux"
+    connect_timeout: 5
+    reboot_timeout: 300
+    pre_reboot_delay: 0
+    post_reboot_delay: 30
+  async: 1
+  poll: 0
+  ignore_errors: yes

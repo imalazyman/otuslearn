@@ -1,0 +1,4 @@
+# roles/promtail/tasks/main.yml
+---
+- name: Check OS family and include appropriate setup
+  ansible.builtin.include_tasks: "{{ ansible_os_family | lower }}.yml"

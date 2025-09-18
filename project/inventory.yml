@@ -1,0 +1,34 @@
+all:
+  vars:
+    ansible_user: vagrant # Имя пользователя, под которым заходить на машины (тот, кому вы добавили ключ)
+    # ansible_ssh_pass: your_password  # Раскомментируйте и укажите пароль, если ключ еще не настроен (плохая практика, но для начала сойдет)
+    # ansible_become_pass: your_sudo_password # Пароль для sudo, если нужен
+  children:
+    # Группа для всех хостов
+    infra_servers:
+      hosts:
+       # firewall:
+       #  ansible_host: 192.168.100.1 # VM1
+        web-srv:
+          ansible_host: 192.168.56.10 # VM2
+        db-1-srv:
+          ansible_host: 192.168.56.11 # VM4
+        db-2-srv:                     
+          ansible_host: 192.168.56.12 # VM5
+        mon-srv:
+          ansible_host: 192.168.56.13 # VM3
+
+    # Группы по ролям (для удобства)
+    # firewalls:
+    #   hosts:
+    #     firewall:
+    webservers:
+      hosts:
+        web-srv:
+    monitoring_servers:
+      hosts:
+        mon-srv:
+    databases:
+      hosts:
+        db-1-srv:
+        db-2-srv:

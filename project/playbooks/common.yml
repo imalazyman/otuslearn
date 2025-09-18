@@ -1,0 +1,7 @@
+# playbooks/common.yml
+---
+- name: Apply common role to all servers
+  hosts: all
+  become: yes
+  roles:
+    - role: common
