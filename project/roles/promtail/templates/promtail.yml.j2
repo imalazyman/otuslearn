@@ -7,7 +7,7 @@ positions:
   filename: /var/lib/promtail/positions.yaml
 
 clients:
-  - url: http://{{ loki_server_host | default('localhost') }}:3100/loki/api/v1/push  # <-- Важно!
+  - url: http://{{ loki_server_host | default('localhost') }}:3100/loki/api/v1/push
 
 scrape_configs:
 - job_name: system
@@ -16,16 +16,18 @@ scrape_configs:
       - localhost
     labels:
       job: varlogs
-      host: "{{ inventory_hostname }}"  # <-- Имя хоста из inventory
+      host: "{{ inventory_hostname }}"
       __path__: /var/log/*log
 
-  # Для сбора логов журнала systemd
-  - job_name: journal
-    journal:
-      max_age: 12h
-      labels:
-        job: systemd-journal
-        host: "{{ inventory_hostname }}"
-    relabel_configs:
-      - source_labels: ['__journal__systemd_unit']
-        target_label: 'unit'
+# Для систем с systemd (RHEL/CentOS/AlmaLinux)
+- job_name: journal
+  journal:
+    max_age: 12h
+    path: /var/log/journal
+    labels:
+      job: systemd-journal
+      host: "{{ inventory_hostname }}"
+  relabel_configs:
+    - source_labels: ['__journal__systemd_unit']
+      target_label: 'unit'
+

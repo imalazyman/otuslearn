@@ -70,6 +70,20 @@
     mode: '0644'
   register: grafana_config_changed 
 
+- name: Deploy Loki config
+  template:
+    src: loki-config.yaml.j2
+    dest: /opt/monitoring/loki-config.yaml
+    mode: '0644'
+  register: loki_config_changed 
+
+# - name: Validate Loki configuration
+#   command:
+#     cmd: docker run --rm -v /opt/monitoring/loki-config.yaml:/etc/loki/loki-config.yaml grafana/loki:3.5.5 -config.file=/etc/loki/loki-config.yaml -verify-config
+#     chdir: /opt/monitoring
+#   register: loki_config_check
+#   failed_when: loki_config_check.rc != 0
+
 - name: Ensure monitoring stack is running with Docker Compose
   command:
     cmd: /usr/local/bin/docker-compose -f /opt/monitoring/docker-compose.yml up -d
@@ -91,7 +105,4 @@
   command:
     cmd: /usr/local/bin/docker-compose -f /opt/monitoring/docker-compose.yml restart
     chdir: /opt/monitoring
-  when: 
-    - prometheus_config_changed is changed
-    - or grafana_config_changed is changed
-    - or compose_config_changed is changed
+  when: loki_config_changed is changed

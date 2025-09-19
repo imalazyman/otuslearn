@@ -8,15 +8,15 @@ all:
     infra_servers:
       hosts:
        # firewall:
-       #  ansible_host: 192.168.100.1 # VM1
+       #  ansible_host: 192.168.100.1 # Файеревол
         web-srv:
-          ansible_host: 192.168.56.10 # VM2
+          ansible_host: 192.168.56.10 # Веб-сервер
         db-1-srv:
-          ansible_host: 192.168.56.11 # VM4
+          ansible_host: 192.168.56.11 # Сервер баз данных
         db-2-srv:                     
-          ansible_host: 192.168.56.12 # VM5
+          ansible_host: 192.168.56.12 # Сервер баз данных - резервный
         mon-srv:
-          ansible_host: 192.168.56.13 # VM3
+          ansible_host: 192.168.56.13 # Сервер мониторинга
 
     # Группы по ролям (для удобства)
     # firewalls:
