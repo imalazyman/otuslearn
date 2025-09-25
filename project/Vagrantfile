@@ -14,7 +14,6 @@ Vagrant.configure("2") do |config|
     web.vm.box = "generic/rocky9"
     web.vm.hostname = "web-srv"
     web.vm.network "private_network", ip: "192.168.56.10"
-    # web.vm.disk :disk, size: "15GB", primary: true
     web.vm.provider "virtualbox" do |vb|
       vb.memory = 1024
       vb.cpus = 1
@@ -40,8 +39,6 @@ Vagrant.configure("2") do |config|
 
     db_1.vm.provision "shell", inline: <<-SHELL
       dnf update -y
-    #   dnf install -y mysql-server
-    #   systemctl start mysqld
     SHELL
   end
 
@@ -60,10 +57,10 @@ Vagrant.configure("2") do |config|
 
     db_2.vm.provision "shell", inline: <<-SHELL
       dnf update -y
-    #   dnf install -y mysql-server
-    #   systemctl start mysqld
-    SHELL
+     SHELL
   end
+
+
   # ===== MONITORING SERVER =====
   config.vm.define "mon" do |mon|
     mon.vm.box = "generic/rocky9"
@@ -77,23 +74,22 @@ Vagrant.configure("2") do |config|
     end
 
     mon.vm.provision "shell", inline: <<-SHELL
-    #   dnf update -y
-    #   dnf install -y mysql-server
-    #   systemctl start mysqld
+      dnf update -y
     SHELL
   end
 
+  # ===== ANSIBLE/BACKUP SERVER =====
   # ===== ANSIBLE/BACKUP SERVER =====
   config.vm.define "confm" do |confm|
     confm.vm.box = "generic/rocky9"
     confm.vm.hostname = "master-srv"
     confm.vm.network "private_network", ip: "192.168.56.14"
-    confm.vm.synced_folder ".", "/vagrant", disabled: true
-
+    
     confm.vm.provider "virtualbox" do |vb|
       vb.memory = 1024
       vb.cpus = 1
       vb.name = "ansible-server"
+      
       guest_additions_iso = "/home/dm.ignatenko@vrgaz.ru/.config/VirtualBox/VBoxGuestAdditions_7.1.12.iso"
       if File.exist?(guest_additions_iso)
         vb.customize ["storageattach", :id,
@@ -102,44 +98,82 @@ Vagrant.configure("2") do |config|
           "--device", 0,
           "--type", "dvddrive", 
           "--medium", guest_additions_iso]
-      end
+      end    
     end
-
+    
+    # ПЕРВЫЙ провиженинг: установка зависимостей и Guest Additions
     confm.vm.provision "shell", inline: <<-SHELL
+      # Обновление системы и установка зависимостей
       dnf update -y
       dnf install epel-release -y
       dnf install kernel-devel kernel-headers gcc make perl -y 
       dnf install ansible git vim python3 python3-pip -y
+      
+      # Монтирование и установка Guest Additions
       mkdir -p /mnt/cdrom
       mount /dev/cdrom /mnt/cdrom 2>/dev/null || true
+      
       if [ -f /mnt/cdrom/VBoxLinuxAdditions.run ]; then
         echo "Устанавливаем Guest Additions..."
         sh /mnt/cdrom/VBoxLinuxAdditions.run
       else
         echo "Guest Additions ISO не найден!"
+        echo "Проверяем доступные устройства:"
+        ls -la /dev/cdrom*
+        echo "Содержимое /mnt/cdrom:"
+        ls -la /mnt/cdrom/ 2>/dev/null || echo "Не смонтировано"
       fi
+      
+      # Перезагрузка для применения Guest Additions
+      echo "Перезагрузка..."
       shutdown -r now
-
     SHELL
-
-  #   config.vm.provision "shell", run: "always", inline: <<-SHELL
-  #     echo "Проверяем Guest Additions после перезагрузки..."
-  #     # Ждем завершения загрузки
-  #     sleep 10
-  #     # Проверяем что Guest Additions работают
-  #     if lsmod | grep -q vboxguest; then
-  #     echo "Guest Additions успешно установлены!"
-  #     echo "Можно монтировать shared folders"
-  #     else
-  #       echo "Ошибка: Guest Additions не работают!"
-  #       exit 1
-  #     fi
-  #  SHELL
-
-   config.vm.synced_folder "./", "/home/vagrant/project", 
-    disabled: false,  # ВКЛЮЧАЕМ синхронизацию
-    create: true,
-    owner: "vagrant",
-    group: "vagrant"
+    
+    # ВТОРОЙ провиженинг: настройка папок ПОСЛЕ перезагрузки
+    confm.vm.provision "shell", run: "always", inline: <<-SHELL
+      echo "Проверка после перезагрузки..."
+      sleep 5
+      
+      # Проверяем что Guest Additions установлены
+      if lsmod | grep -q vboxguest; then
+        echo "Guest Additions успешно установлены!"
+        echo "Можно использовать shared folders"
+      else
+        echo "Ошибка: Guest Additions не работают!"
+        echo "Попытка установки вручную..."
+        
+        # Повторная попытка установки
+        mkdir -p /mnt/cdrom
+        mount /dev/cdrom /mnt/cdrom 2>/dev/null || true
+        
+        if [ -f /mnt/cdrom/VBoxLinuxAdditions.run ]; then
+          sh /mnt/cdrom/VBoxLinuxAdditions.run
+          echo "Перезагрузка после установки..."
+          shutdown -r now
+        else
+          echo "Не удалось найти Guest Additions ISO"
+          exit 1
+        fi
+      fi
+    SHELL
+    
+    # ТРЕТИЙ провиженинг: окончательная настройка
+    confm.vm.provision "shell", run: "always", inline: <<-SHELL
+      echo "Финальная настройка..."
+      
+      # Создаем папку для проекта
+      mkdir -p /home/vagrant/project
+      chown vagrant:vagrant /home/vagrant/project
+      
+      echo "Готово к работе!"
+    SHELL
+    
+    # Настройка синхронизации папок (после всех провиженингов)
+    confm.vm.synced_folder "./", "/home/vagrant/project", 
+      disabled: false, 
+      create: true,
+      owner: "vagrant",
+      group: "vagrant"
+  # endnfig.vm.synced_folder "./", "/home/vagrant/project", disabled: false, create: true
   end
 end

@@ -17,6 +17,8 @@
       - wget
       - htop
       - git
+      - policycoreutils-python-utils  # ← ДОБАВИТЬ для SELinux управления
+      - libselinux-python3
     state: present
 
 # настройка хранения journald логов

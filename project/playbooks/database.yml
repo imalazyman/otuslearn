@@ -1,0 +1,7 @@
+# playbooks/database.yml
+---
+- name: Configure database servers
+  hosts: databases
+  become: yes
+  roles:
+    - role: mariadb

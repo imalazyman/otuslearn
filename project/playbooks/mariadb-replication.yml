@@ -1,0 +1,65 @@
+# playbooks/mariadb-replication.yml
+---
+- name: Setup MariaDB replication
+  hosts: databases
+  become: yes
+  collections:
+    - community.mysql
+  tasks:
+    - name: Configure replication user on primary
+      community.mysql.mysql_user:
+        name: "{{ mariadb_replication_user }}"
+        host: "%"
+        password: "{{ mariadb_replication_password }}"
+        priv: "*.*:REPLICATION SLAVE"
+        state: present
+        login_user: root
+        login_password: "{{ mariadb_root_password }}"
+      when: inventory_hostname == "db-1-srv"
+      delegate_to: db-1-srv
+
+    - name: Get primary status
+      community.mysql.mysql_replication:
+        mode: getprimary
+        login_user: root
+        login_password: "{{ mariadb_root_password }}"
+      when: inventory_hostname == "db-1-srv"
+      register: primary_status
+      delegate_to: db-1-srv
+
+    - name: Show primary status
+      debug:
+        msg: "Primary status: {{ primary_status }}"
+      when: inventory_hostname == "db-1-srv"
+
+    - name: Configure replica replication
+      community.mysql.mysql_replication:
+        mode: changeprimary
+        primary_host: "db-1-srv"
+        primary_user: "{{ mariadb_replication_user }}"
+        primary_password: "{{ mariadb_replication_password }}"
+        primary_log_file: "{{ hostvars['db-1-srv']['primary_status']['File'] }}"
+        primary_log_pos: "{{ hostvars['db-1-srv']['primary_status']['Position'] }}"
+        login_user: root
+        login_password: "{{ mariadb_root_password }}"
+      when: inventory_hostname == "db-2-srv"
+
+    - name: Start replica replication
+      community.mysql.mysql_replication:
+        mode: startreplica
+        login_user: root
+        login_password: "{{ mariadb_root_password }}"
+      when: inventory_hostname == "db-2-srv"
+
+    - name: Get replica status
+      community.mysql.mysql_replication:
+        mode: getreplica
+        login_user: root
+        login_password: "{{ mariadb_root_password }}"
+      when: inventory_hostname == "db-2-srv"
+      register: replica_status
+
+    - name: Show replica status
+      debug:
+        msg: "Replica status: {{ replica_status }}"
+      when: inventory_hostname == "db-2-srv"

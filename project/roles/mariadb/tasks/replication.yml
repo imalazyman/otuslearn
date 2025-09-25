@@ -1,0 +1,15 @@
+# roles/mariadb/tasks/replication.yml
+---
+- name: Configure replication on slave
+  mysql_replication:
+    mode: changemaster
+    master_host: "db-1-srv"
+    master_user: "{{ mariadb_replication_user }}"
+    master_password: "{{ mariadb_replication_password }}"
+    master_log_file: "{{ master_status.File }}"
+    master_log_pos: "{{ master_status.Position }}"
+
+- name: Start replication
+  mysql_replication:
+    mode: startslave
+    
